@@ -5,7 +5,7 @@ type AnimationConfig = {
   [name: string]: number[];
 };
 
-export interface ISpriteSheetProps {
+export interface SpriteSheetProps {
   source: number | { uri: string; width: number; height: number };
   columns: number;
   rows: number;
@@ -18,7 +18,12 @@ export interface ISpriteSheetProps {
   onLoad?: () => void;
 }
 
-export class SpriteSheet extends PureComponent<ISpriteSheetProps, {}> {
+/**
+ * @deprecated Use SpriteSheetProps instead
+ */
+export interface ISpriteSheetProps extends SpriteSheetProps {}
+
+export class SpriteSheet extends PureComponent<SpriteSheetProps, {}> {
   play: (config: {
     type: string;
     fps?: number;
