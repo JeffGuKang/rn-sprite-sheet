@@ -16,6 +16,7 @@ export default class SpriteSheet extends React.PureComponent {
     columns: PropTypes.number.isRequired,
     rows: PropTypes.number.isRequired,
     animations: PropTypes.object.isRequired, // see example
+    initNumber: PropTypes.number.isRequired,
     viewStyle: stylePropType, // styles for the sprite sheet container
     imageStyle: stylePropType, // styles for the sprite sheet
     height: PropTypes.number, // set either height, width, or neither
@@ -46,7 +47,6 @@ export default class SpriteSheet extends React.PureComponent {
       translateXOutputRange: [0, 1],
     };
 
-    this.time = new Animated.Value(0);
     this.interpolationRanges = {};
 
     let {
@@ -59,7 +59,9 @@ export default class SpriteSheet extends React.PureComponent {
       frameWidth,
       offsetY,
       offsetX,
+      initNumber,
     } = this.props;
+    this.time = new Animated.Value(initNumber);
     let image = resolveAssetSource(source);
     let ratio = 1;
     let imageHeight = image.height;
@@ -105,7 +107,7 @@ export default class SpriteSheet extends React.PureComponent {
       offsetX,
       offsetY,
     } = this.state;
-    let { viewStyle, imageStyle, source, onLoad } = this.props;
+    let { viewStyle, imageStyle, source, onLoad, initNumber } = this.props;
 
     let {
       translateY = { in: [0, 0], out: [offsetY, offsetY] },
@@ -187,12 +189,13 @@ export default class SpriteSheet extends React.PureComponent {
   };
 
   reset = cb => {
+    let {initNumber} = this.props;
     this.time.stopAnimation(cb);
-    this.time.setValue(0);
+    this.time.setValue(initNumber);
   };
 
   play = ({ type, fps = 24, loop = false, resetAfterFinish = false, onFinish = () => {} }) => {
-    let { animations } = this.props;
+    let { animations, initNumber } = this.props;
     let { length } = animations[type];
 
     this.setState({ animationType: type }, () => {
@@ -203,14 +206,14 @@ export default class SpriteSheet extends React.PureComponent {
         useNativeDriver: true, // Using native animation driver instead of JS
       });
 
-      this.time.setValue(0);
+      this.time.setValue(initNumber);
 
       if (loop) {
         Animated.loop(animation).start();
       } else {
         animation.start(() => {
           if (resetAfterFinish) {
-            this.time.setValue(0);
+            this.time.setValue(initNumber);
           }
           onFinish();
         });
