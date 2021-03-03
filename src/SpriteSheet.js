@@ -104,6 +104,9 @@ export default class SpriteSheet extends React.PureComponent {
     } = this.state;
     let { viewStyle, imageStyle, source, onLoad, initNumber } = this.props;
     
+    /**
+     * translate is required initial value after calculation.
+     */
     let {
       translateY = { 
         in: [0, 0], 
@@ -162,11 +165,17 @@ export default class SpriteSheet extends React.PureComponent {
     );
   }
 
+  /**
+   * cnt is count;
+   * Since initNumber is selectable, conditional statements are used.
+   * If the initial values are different, an array in which the order is changed must be used.
+   */
   generateInterpolationRanges = () => {
     let { animations, initNumber } = this.props;
     for (let key in animations) {
       let { length } = animations[key];
       let input = [].concat(...Array.from({ length }, (_, i) => [i, i + 1]));
+
       let cntX = initNumber;
       let cntY = initNumber;
 
