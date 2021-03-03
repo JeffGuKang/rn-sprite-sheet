@@ -11,7 +11,7 @@ export interface ISpriteSheetProps {
   rows: number;
   ref: MutableRefObject<SpriteSheet | null>;
   animations: AnimationConfig; // see example
-  initNumber: PropTypes.number.isRequired,
+  initNumber: number;
   viewStyle?: StyleProp<ViewStyle>; // styles for the sprite sheet container
   imageStyle?: StyleProp<ImageStyle>; // styles for the sprite sheet
   width?: number;
