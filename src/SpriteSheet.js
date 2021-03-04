@@ -12,7 +12,7 @@ export default class SpriteSheet extends React.PureComponent {
     columns: PropTypes.number.isRequired,
     rows: PropTypes.number.isRequired,
     animations: PropTypes.object.isRequired, // see example
-    initNumber: PropTypes.number,
+    firstColumn: PropTypes.number, // choose the column on sprite image 
     viewStyle: stylePropType, // styles for the sprite sheet container
     imageStyle: stylePropType, // styles for the sprite sheet
     height: PropTypes.number, // set either height, width, or neither
@@ -102,7 +102,7 @@ export default class SpriteSheet extends React.PureComponent {
       offsetX,
       offsetY,
     } = this.state;
-    let { viewStyle, imageStyle, source, onLoad, initNumber } = this.props;
+    let { viewStyle, imageStyle, source, onLoad, firstColumn } = this.props;
     
     /**
      * translate is required initial value after calculation.
@@ -111,15 +111,15 @@ export default class SpriteSheet extends React.PureComponent {
       translateY = { 
         in: [0, 0], 
         out: [
-          initNumber > -1 ? this.getFrameCoords(initNumber).y : offsetY, 
-          initNumber > -1 ? this.getFrameCoords(initNumber).y : offsetY, 
+          firstColumn > -1 ? this.getFrameCoords(firstColumn).y : offsetY, 
+          firstColumn > -1 ? this.getFrameCoords(firstColumn).y : offsetY, 
         ] 
       },
       translateX = { 
         in: [0, 0], 
         out: [
-          initNumber > -1 ? this.getFrameCoords(initNumber).x : offsetX, 
-          initNumber > -1 ? this.getFrameCoords(initNumber).x : offsetX, 
+          firstColumn > -1 ? this.getFrameCoords(firstColumn).x : offsetX, 
+          firstColumn > -1 ? this.getFrameCoords(firstColumn).x : offsetX, 
         ]
       },
     } = this.interpolationRanges[animationType] || {};
@@ -167,29 +167,29 @@ export default class SpriteSheet extends React.PureComponent {
 
   /**
    * cnt is count;
-   * Since initNumber is selectable, conditional statements are used.
+   * Since firstColumn is selectable, conditional statements are used.
    * If the initial values are different, an array in which the order is changed must be used.
    */
   generateInterpolationRanges = () => {
-    let { animations, initNumber } = this.props;
+    let { animations, firstColumn } = this.props;
     for (let key in animations) {
       let { length } = animations[key];
       let input = [].concat(...Array.from({ length }, (_, i) => [i, i + 1]));
 
-      let cntX = initNumber;
-      let cntY = initNumber;
+      let cntX = firstColumn;
+      let cntY = firstColumn;
 
       this.interpolationRanges[key] = {
         translateY: {
           in: input,
           out: [].concat(
             ...animations[key].map(i => {
-              if(initNumber > -1){
+              if(firstColumn > -1){
                 if(cntY === length){
                   cntY = 0;
                 }
                 
-                let { y } = this.getFrameCoords(animations[key][cntY] !== undefined && length > 1 ? animations[key][cntY] : initNumber);
+                let { y } = this.getFrameCoords(animations[key][cntY] !== undefined && length > 1 ? animations[key][cntY] : firstColumn);
                 cntY++;
                 return [y, y];
               } else {
@@ -203,11 +203,11 @@ export default class SpriteSheet extends React.PureComponent {
           in: input,
           out: [].concat(
             ...animations[key].map(i => {
-              if(initNumber > -1){
+              if(firstColumn > -1){
                 if(cntX === length){
                   cntX = 0;
                 }
-                let { x } = this.getFrameCoords(animations[key][cntX] !== undefined && length > 1 ? animations[key][cntX] : initNumber);
+                let { x } = this.getFrameCoords(animations[key][cntX] !== undefined && length > 1 ? animations[key][cntX] : firstColumn);
                 cntX++;
                 return [x, x];
               } else {
