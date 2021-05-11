@@ -32,6 +32,7 @@ export default class SpriteSheet extends React.PureComponent {
     height: PropTypes.number, // set either height, width, or neither
     width: PropTypes.number, // do not set both height and width
     onLoad: PropTypes.func,
+    onLoadEnd: PropTypes.func,
     frameWidth: PropTypes.number,
     frameHeight: PropTypes.number,
   };
@@ -152,6 +153,7 @@ export default class SpriteSheet extends React.PureComponent {
         <Animated.Image
           source={source}
           onLoad={onLoad}
+          onLoadEnd={onLoadEnd}
           style={[
             imageStyle,
             {

@@ -11,12 +11,13 @@ export interface ISpriteSheetProps {
   rows: number;
   ref: MutableRefObject<SpriteSheet | null>;
   animations: AnimationConfig; // see example
-  firstColumn: number; // choose the column on sprite image 
+  firstColumn?: number; // choose the column on sprite image 
   viewStyle?: StyleProp<ViewStyle>; // styles for the sprite sheet container
   imageStyle?: StyleProp<ImageStyle>; // styles for the sprite sheet
   width?: number;
   height?: number;
   onLoad?: () => void;
+  onLoadEnd?: () => void;
 }
 
 export class SpriteSheet extends PureComponent<ISpriteSheetProps, {}> {
