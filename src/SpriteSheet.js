@@ -152,7 +152,6 @@ export default class SpriteSheet extends React.PureComponent {
         <Animated.Image
           source={source}
           onLoad={onLoad}
-          onLoadEnd={onLoadEnd}
           style={[
             imageStyle,
             {
