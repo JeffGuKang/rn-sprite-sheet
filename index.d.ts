@@ -17,7 +17,6 @@ export interface ISpriteSheetProps {
   width?: number;
   height?: number;
   onLoad?: () => void;
-  onLoadEnd?: () => void;
 }
 
 export class SpriteSheet extends PureComponent<ISpriteSheetProps, {}> {
