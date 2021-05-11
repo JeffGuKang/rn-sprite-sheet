@@ -35,6 +35,7 @@ export default class SpriteSheet extends React.PureComponent {
     frameWidth: PropTypes.number,
     frameHeight: PropTypes.number,
   };
+  
   static defaultProps = {
     columns: 1,
     rows: 1,
@@ -94,17 +95,70 @@ export default class SpriteSheet extends React.PureComponent {
       frameWidth = (image.width / columns) * ratio;
     }
   
-    Object.assign(this.state, {
+    this.state = {
       imageHeight,
       imageWidth,
       frameHeight,
       frameWidth,
       offsetX,
       offsetY,
-    });
+    }
   
     this.generateInterpolationRanges();
   }
+
+  componentDidUpdate() {
+    this.initAnimation()
+  }
+
+  initAnimation = () => {
+    let {
+      source,
+      height,
+      width,
+      rows,
+      columns,
+      frameHeight,
+      frameWidth,
+      offsetY,
+      offsetX,
+    } = this.props;
+    
+    let image = resolveAssetSource(source);
+    let ratio = 1;
+    let imageHeight = image.height;
+    let imageWidth = image.width;
+    offsetX = -offsetX;
+    offsetY = -offsetY;
+    frameHeight = frameHeight || image.height / rows;
+    frameWidth = frameWidth || image.width / columns;
+  
+    if (width) {
+      ratio = (width * columns) / image.width;
+      imageHeight = image.height * ratio;
+      imageWidth = width * columns;
+      frameHeight = (image.height / rows) * ratio;
+      frameWidth = width;
+    } else if (height) {
+      ratio = (height * rows) / image.height;
+      imageHeight = height * rows;
+      imageWidth = image.width * ratio;
+      frameHeight = height;
+      frameWidth = (image.width / columns) * ratio;
+    }
+  
+    this.setState({
+      imageHeight,
+      imageWidth,
+      frameHeight,
+      frameWidth,
+      offsetX,
+      offsetY,
+    })
+    
+    this.generateInterpolationRanges();
+  }
+
 
   render() {
     let {
@@ -245,6 +299,7 @@ export default class SpriteSheet extends React.PureComponent {
   };
 
   play = ({ type, fps = 24, loop = false, resetAfterFinish = false, onFinish = () => {} }) => {
+    this.initAnimation()
     let { animations } = this.props;
     let { length } = animations[type];
     this.setState({ animationType: type }, () => {
